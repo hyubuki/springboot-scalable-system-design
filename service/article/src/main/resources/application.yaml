@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: article
+
+  config:
+    import:
+      - logging.yaml
+
+server:
+  port: 9000
