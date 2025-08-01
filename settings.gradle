@@ -8,7 +8,7 @@ pluginManagement {
 // define the root project name and include subprojects
 rootProject.name = 'hyubuki-dashboard'
 include(":service:article")
-include(":service:article-read")
+//include(":service:article-read")
 //include(":service:comment")
 //include(":service:hot-article")
 //include(":service:like")
@@ -16,6 +16,6 @@ include(":service:article-read")
 
 // private local modules
 include(":support:logging")
-project(":support:logging").projectDir = new File(settingsDir, "../../support/logging")
+project(":support:logging").projectDir = new File(settingsDir, "../../../support/logging")
 include(":support:common")
-project(":support:common").projectDir = new File(settingsDir, "../../support/common")
+project(":support:common").projectDir = new File(settingsDir, "../../../support/common")
