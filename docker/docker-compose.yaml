@@ -1,0 +1,14 @@
+services:
+  mysql:
+    container_name: mysql-coupon
+    image: mysql:8.0.38
+    environment:
+      MYSQL_ROOT_PASSWORD: hyubuki
+    ports:
+      - "3306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    restart: always
