@@ -7,6 +7,8 @@ import app.hyubuki.article.domain.service.dto.request.ArticleUpdateRequest;
 import app.hyubuki.article.domain.service.dto.response.ArticleResponse;
 import hyubuki.support.common.response.ApiResult;
 import hyubuki.support.common.response.CommonResponse;
+import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -113,5 +115,36 @@ class ArticleApiTest {
         .body(CommonResponse.class);
     // then
     assertThat(response.getApiResult()).isEqualTo(ApiResult.SUCCESS);
+  }
+
+  @Test
+  @Order(5)
+  @DisplayName("readAllInfiniteScrollTest")
+  void readAllInfiniteScrollTest() {
+    // given
+    Long boardId = 1L;
+    Long limit = 30L;
+
+    // when
+    List<ArticleResponse> articles = readAllInfiniteScroll(boardId, limit, null).getData();
+    Long lastArticleId = articles.getLast().articleId();
+
+    List<ArticleResponse> infiniteArticles = readAllInfiniteScroll(boardId, limit, lastArticleId).getData();
+
+    // then
+    assertThat(infiniteArticles.getLast().articleId()).isEqualTo(77923405977011244L);
+  }
+
+  private CommonResponse<List<ArticleResponse>> readAllInfiniteScroll(Long boardId, Long limit, Long lastArticleId) {
+    String uri = "/v1/articles/infinite-scroll?boardId=" + boardId + "&limit=" + limit;
+
+    if(lastArticleId != null) {
+      uri += "&lastArticleId=" + lastArticleId;
+    }
+
+    return restClient.get()
+        .uri(uri)
+        .retrieve()
+        .body(new ParameterizedTypeReference<CommonResponse<List<ArticleResponse>>>() {});
   }
 }
