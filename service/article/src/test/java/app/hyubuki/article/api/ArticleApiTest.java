@@ -11,10 +11,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ArticleApiTest {
 
@@ -104,7 +106,7 @@ class ArticleApiTest {
   @Test
   @Order(4)
   @DisplayName("deleteTest")
-  void deleteTest() {
+  void deleteTest() throws InterruptedException {
     CommonResponse<?> response = restClient.delete()
         .uri("/v1/articles/{articleId}", id)
         .retrieve()

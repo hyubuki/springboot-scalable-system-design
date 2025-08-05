@@ -3,6 +3,7 @@ package app.hyubuki.article.domain.service;
 import app.hyubuki.article.domain.persist.ArticleJpaRepository;
 import app.hyubuki.article.domain.service.dto.request.ArticleCreateRequest;
 import app.hyubuki.article.domain.service.dto.request.ArticleUpdateRequest;
+import app.hyubuki.article.domain.service.dto.response.ArticlePageResponse;
 import app.hyubuki.article.domain.service.dto.response.ArticleResponse;
 import app.hyubuki.article.entity.Article;
 import hyubuki.support.common.snowflake.Snowflake;
@@ -22,7 +23,6 @@ public class ArticleService {
     Article article = articleJpaRepository.save(
         Article.create(snowflake.nextId(), request.title(), request.content(), request.writerId(), request.boardId())
     );
-
     return ArticleResponse.from(article);
   }
 
@@ -43,5 +43,16 @@ public class ArticleService {
   @Transactional
   public void delete(Long articleId) {
     articleJpaRepository.deleteById(articleId);
+  }
+
+  public ArticlePageResponse readAll(Long boardId, Long page, Long pageSize) {
+    return ArticlePageResponse.of(
+        articleJpaRepository.findAll(boardId, page, pageSize).stream()
+            .map(ArticleResponse::from)
+            .toList(),
+         articleJpaRepository.count(
+             boardId,
+             PageLimitCalculator.calculatePageLimit(boardId, (page-1) * pageSize, pageSize)
+         ));
   }
 }
