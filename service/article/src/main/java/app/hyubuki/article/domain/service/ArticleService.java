@@ -8,6 +8,8 @@ import app.hyubuki.article.domain.service.dto.response.ArticleResponse;
 import app.hyubuki.article.entity.Article;
 import hyubuki.support.common.snowflake.Snowflake;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,10 @@ public class ArticleService {
     return ArticleResponse.from(articleJpaRepository.findById(articleId).orElseThrow());
   }
 
+  public ArticlePageResponse infiniteRead(Long articleId){
+    return null;
+  }
+
   @Transactional
   public void delete(Long articleId) {
     articleJpaRepository.deleteById(articleId);
@@ -55,4 +61,14 @@ public class ArticleService {
              PageLimitCalculator.calculatePageLimit(boardId, (page-1) * pageSize, pageSize)
          ));
   }
+
+  public List<ArticleResponse> readAllInfiniteScroll(Long boardId, Long pageSize, Long lastArticleId) {
+
+    List<Article> articles = Objects.isNull(lastArticleId) ?
+        articleJpaRepository.findAllInfiniteScroll(boardId, pageSize) : articleJpaRepository.findAllInfiniteScroll(boardId, pageSize, lastArticleId);
+
+
+    return articles.stream().map(ArticleResponse::from).toList();
+  }
 }
+

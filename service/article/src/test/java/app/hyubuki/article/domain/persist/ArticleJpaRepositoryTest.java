@@ -12,7 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ArticleJpaRepositoryTest {
 
-  Logger logger = LoggerFactory.getLogger(ArticleJpaRepositoryTest.class);
+  Logger log = LoggerFactory.getLogger(getClass());
+
   @Autowired
   ArticleJpaRepository articleJpaRepository;
 
@@ -25,7 +26,26 @@ class ArticleJpaRepositoryTest {
     // when
 
     // then
-    logger.info("articles.size : {}", articles.size());
-    articles.forEach(System.out::println);
+    log.info("articles.size : {}", articles.size());
+  }
+
+  @Test
+  @DisplayName("findAllInfiniteScrollTest")
+  void findAllInfiniteScrollTest() {
+    // given
+    List<Article> articles = articleJpaRepository.findAllInfiniteScroll(1L, 30L);
+    log.info("articles.size : {}", articles.size());
+    for (Article article : articles) {
+      log.info("article_id = {}", article.getArticleId());
+    }
+    // when
+    Long lastArticleId = articles.getLast().getArticleId();
+
+    // then
+    List<Article> infiniteScroll = articleJpaRepository.findAllInfiniteScroll(1L, 30L, lastArticleId);
+    log.info("articles.size : {}", infiniteScroll.size());
+    for (Article article : infiniteScroll) {
+      log.info("infinite_article_id = {}", article.getArticleId());
+    }
   }
 }
