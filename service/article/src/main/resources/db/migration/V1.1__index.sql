@@ -1,0 +1,1 @@
+create index idx_board_id_article_id on article(board_id asc, article_id desc);
