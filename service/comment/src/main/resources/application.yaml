@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: article
+
+  profiles:
+    active: local
+
+  config:
+    import:
+      - logging.yaml
+
+server:
+  port: 9001
